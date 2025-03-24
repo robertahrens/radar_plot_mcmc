@@ -11,7 +11,7 @@ multi_radar_plot <- function(categories, values_list, names = NULL, title = "",
   }
   # Set default colors if not provided
   if (is.null(colors)) {
-    colors <- viridis::viridis(m)
+    colors <- viridisLite::viridis(m)
   }
   max_values <- apply(do.call("rbind", values_list), 2, max)
 
