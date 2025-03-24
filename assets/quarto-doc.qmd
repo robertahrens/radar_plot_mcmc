@@ -7,7 +7,7 @@ toc-depth: 3
 
 This document explains the usage of the `multi_radar_plot` function, which creates radar (spider) charts for visualizing multiple datasets simultaneously. The function is particularly useful for displaying MCMC simulation results across different scenarios and metrics.
 
-![Example radar plot](https://github.com/robertahrens/radar_plot_mcmc/blob/main/wiki_images/example_plot.jpg)
+![Example radar plot](static/example_plot.jpg)
 
 ## Function Overview
 
