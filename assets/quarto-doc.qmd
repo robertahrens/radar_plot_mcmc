@@ -1,0 +1,124 @@
+---
+title: "Multi Radar Plot for MCMC Results"
+format: html
+toc: true
+toc-depth: 3
+---
+
+This document explains the usage of the `multi_radar_plot` function, which creates radar (spider) charts for visualizing multiple datasets simultaneously. The function is particularly useful for displaying MCMC simulation results across different scenarios and metrics.
+
+![Example radar plot](https://github.com/robertahrens/radar_plot_mcmc/blob/main/wiki_images/example_plot.jpg)
+
+## Function Overview
+
+The `multi_radar_plot` function plots multiple datasets on the same radar chart. It's especially designed to visualize the distribution of MCMC samples across different metrics and scenarios.
+
+### Function Signature
+
+```r
+multi_radar_plot <- function(categories, values_list, names = NULL, title = "", 
+                           circle = FALSE, colors = NULL, webclr = "grey80", 
+                           fill = FALSE, alpha = 0.05)
+```
+
+## Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| categories | Vector of category/metric names | Required |
+| values_list | List of matrices, each containing MCMC samples | Required |
+| names | Vector of names for each dataset/scenario | NULL |
+| title | Title for the plot | NULL |
+| circle | Boolean indicating whether to use circular grid lines | FALSE |
+| colors | Vector of colors for each dataset | Viridis |
+| webclr | Color for the radar web/grid lines | grey80 |
+| fill | Boolean indicating whether to fill the polygons | FALSE |
+| alpha | Transparency level for MCMC samples | 0.05 |
+
+## Behavior
+
+1. The function automatically scales each metric to its maximum value across all datasets
+2. For each MCMC sample, it draws a polygon connecting the normalized values
+3. The transparency (`alpha`) allows visualization of the density/uncertainty in the MCMC results
+4. Maximum values for each metric are displayed on the axes
+
+## Example Usage
+
+```r
+# Define scenarios and categories
+scenarios <- c("Scenario A", "Scenario B", "Scenario C", "Scenario D")
+categories <- c("Catch", "Cpue", "Revenue", "Collapse", "Variability")
+
+# Generate synthetic MCMC samples for each scenario
+# Format: matrix with rows = MCMC samples, columns = categories
+values1 <- sapply(c(80, 7.2, 9.0, 6.8, 8.3), FUN = function(x) rnorm(100, x, x*0.05))
+values2 <- sapply(c(90, 8.5, 5.2, 3.0, 2.5), FUN = function(x) rnorm(100, x, x*0.05))
+values3 <- sapply(c(100, 1.5, 8.2, 7.0, 4.5), FUN = function(x) rnorm(100, x, x*0.05))
+values4 <- sapply(c(115, 5.5, 3.6, 2.0, 9.5), FUN = function(x) rnorm(100, x, x*0.05))
+
+# Combine into a list
+values_list <- list(values1, values2, values3, values4)
+
+# Set up plot margins
+op <- list("omi" = par("omi"), "mar" = par("mar"), "xpd" = par("xpd"))
+par(omi = c(1,1,1,1), mar = c(1, 1, 1, 1), xpd = NA)
+
+# Create the plot
+multi_radar_plot(
+  categories = categories,
+  values_list = values_list,
+  names = scenarios,
+  title = "",
+  alpha = 0.05,
+  fill = FALSE,
+  circle = FALSE
+)
+
+# Restore original plot parameters
+par(op)
+```
+
+## Visual Interpretation
+
+The resulting radar plot displays:
+
+* Each axis represents a different metric (Catch, Cpue, Revenue, etc.)
+* Each scenario is represented by a different color
+* Multiple semi-transparent lines of the same color represent different MCMC samples
+* The density of lines indicates the probability distribution for each metric
+* All metrics are scaled relative to their maximum values (shown at the end of each axis)
+
+## Customization Options
+
+### Circular vs. Angular Grid
+
+* Set `circle = TRUE` for circular grid lines
+* Set `circle = FALSE` (default) for angular grid lines that connect across axes
+
+### Filled vs. Outline
+
+* Set `fill = TRUE` to fill the polygons with semi-transparent color
+* Set `fill = FALSE` (default) to show only the outlines
+
+### Color Schemes
+
+* Default colors use the viridis color palette
+* Custom colors can be provided as a vector to the `colors` parameter
+
+## Implementation Notes
+
+* The function automatically handles normalization of values
+* Category labels are intelligently positioned around the radar chart
+* The function supports any number of categories (axes) and scenarios (datasets)
+* Transparency (`alpha`) should be adjusted based on the number of MCMC samples
+
+## Dependencies
+
+The function depends on the `viridis` package for default color schemes.
+
+```{r}
+#| eval: false
+# Install required package if needed
+if (!require("viridis")) install.packages("viridis")
+library(viridis)
+```
