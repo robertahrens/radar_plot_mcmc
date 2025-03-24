@@ -1,0 +1,92 @@
+[
+  {
+    "objectID": "assets/quarto-doc.html",
+    "href": "assets/quarto-doc.html",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "",
+    "text": "This document explains the usage of the multi_radar_plot function, which creates radar (spider) charts for visualizing multiple datasets simultaneously. The function is particularly useful for displaying MCMC simulation results across different scenarios and metrics.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#function-overview",
+    "href": "assets/quarto-doc.html#function-overview",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Function Overview",
+    "text": "Function Overview\nThe multi_radar_plot function plots multiple datasets on the same radar chart. It’s especially designed to visualize the distribution of MCMC samples across different metrics and scenarios.\n\nFunction Signature\nmulti_radar_plot &lt;- function(categories, values_list, names = NULL, title = \"\", \n                           circle = FALSE, colors = NULL, webclr = \"grey80\", \n                           fill = FALSE, alpha = 0.05)",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#parameters",
+    "href": "assets/quarto-doc.html#parameters",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Parameters",
+    "text": "Parameters\n\n\n\n\n\n\n\n\nParameter\nDescription\nDefault\n\n\n\n\ncategories\nVector of category/metric names\nRequired\n\n\nvalues_list\nList of matrices, each containing MCMC samples\nRequired\n\n\nnames\nVector of names for each dataset/scenario\nNULL\n\n\ntitle\nTitle for the plot\nNULL\n\n\ncircle\nBoolean indicating whether to use circular grid lines\nFALSE\n\n\ncolors\nVector of colors for each dataset\nViridis\n\n\nwebclr\nColor for the radar web/grid lines\ngrey80\n\n\nfill\nBoolean indicating whether to fill the polygons\nFALSE\n\n\nalpha\nTransparency level for MCMC samples\n0.05",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#behavior",
+    "href": "assets/quarto-doc.html#behavior",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Behavior",
+    "text": "Behavior\n\nThe function automatically scales each metric to its maximum value across all datasets\nFor each MCMC sample, it draws a polygon connecting the normalized values\nThe transparency (alpha) allows visualization of the density/uncertainty in the MCMC results\nMaximum values for each metric are displayed on the axes",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#example-usage",
+    "href": "assets/quarto-doc.html#example-usage",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Example Usage",
+    "text": "Example Usage\n# Define scenarios and categories\nscenarios &lt;- c(\"Scenario A\", \"Scenario B\", \"Scenario C\", \"Scenario D\")\ncategories &lt;- c(\"Catch\", \"Cpue\", \"Revenue\", \"Collapse\", \"Variability\")\n\n# Generate synthetic MCMC samples for each scenario\n# Format: matrix with rows = MCMC samples, columns = categories\nvalues1 &lt;- sapply(c(80, 7.2, 9.0, 6.8, 8.3), FUN = function(x) rnorm(100, x, x*0.05))\nvalues2 &lt;- sapply(c(90, 8.5, 5.2, 3.0, 2.5), FUN = function(x) rnorm(100, x, x*0.05))\nvalues3 &lt;- sapply(c(100, 1.5, 8.2, 7.0, 4.5), FUN = function(x) rnorm(100, x, x*0.05))\nvalues4 &lt;- sapply(c(115, 5.5, 3.6, 2.0, 9.5), FUN = function(x) rnorm(100, x, x*0.05))\n\n# Combine into a list\nvalues_list &lt;- list(values1, values2, values3, values4)\n\n# Set up plot margins\nop &lt;- list(\"omi\" = par(\"omi\"), \"mar\" = par(\"mar\"), \"xpd\" = par(\"xpd\"))\npar(omi = c(1,1,1,1), mar = c(1, 1, 1, 1), xpd = NA)\n\n# Create the plot\nmulti_radar_plot(\n  categories = categories,\n  values_list = values_list,\n  names = scenarios,\n  title = \"\",\n  alpha = 0.05,\n  fill = FALSE,\n  circle = FALSE\n)\n\n# Restore original plot parameters\npar(op)",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#visual-interpretation",
+    "href": "assets/quarto-doc.html#visual-interpretation",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Visual Interpretation",
+    "text": "Visual Interpretation\nThe resulting radar plot displays:\n\nEach axis represents a different metric (Catch, Cpue, Revenue, etc.)\nEach scenario is represented by a different color\nMultiple semi-transparent lines of the same color represent different MCMC samples\nThe density of lines indicates the probability distribution for each metric\nAll metrics are scaled relative to their maximum values (shown at the end of each axis)",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#customization-options",
+    "href": "assets/quarto-doc.html#customization-options",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Customization Options",
+    "text": "Customization Options\n\nCircular vs. Angular Grid\n\nSet circle = TRUE for circular grid lines\nSet circle = FALSE (default) for angular grid lines that connect across axes\n\n\n\nFilled vs. Outline\n\nSet fill = TRUE to fill the polygons with semi-transparent color\nSet fill = FALSE (default) to show only the outlines\n\n\n\nColor Schemes\n\nDefault colors use the viridis color palette\nCustom colors can be provided as a vector to the colors parameter",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#implementation-notes",
+    "href": "assets/quarto-doc.html#implementation-notes",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Implementation Notes",
+    "text": "Implementation Notes\n\nThe function automatically handles normalization of values\nCategory labels are intelligently positioned around the radar chart\nThe function supports any number of categories (axes) and scenarios (datasets)\nTransparency (alpha) should be adjusted based on the number of MCMC samples",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "assets/quarto-doc.html#dependencies",
+    "href": "assets/quarto-doc.html#dependencies",
+    "title": "Multi Radar Plot for MCMC Results",
+    "section": "Dependencies",
+    "text": "Dependencies\nThe function depends on the viridis package for default color schemes.\n\n# Install required package if needed\nif (!require(\"viridis\")) install.packages(\"viridis\")\nlibrary(viridis)",
+    "crumbs": [
+      "Home"
+    ]
+  }
+]
